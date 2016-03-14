@@ -1,0 +1,15 @@
+---
+- include: playbooks/download.yml
+- include: playbooks/init.yml
+- include: playbooks/rundeck_nodeinfo.yml
+- include: playbooks/rundeck.yml
+#- include: playbooks/zookeeper.yml
+#- include: playbooks/kafka.yml
+#- include: playbooks/storm.yml
+#- include: playbooks/kafka_mirrormaker.yml
+#- include: playbooks/kafka-manager.yml
+#- include: playbooks/kafka-offset-monitor.yml
+- include: playbooks/zk-web.yml
+- include: playbooks/zeppelin.yml
+#- include: playbooks/sensu.yml
+#- include: playbooks/topbeat.yml

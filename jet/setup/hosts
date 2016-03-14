@@ -1,0 +1,20 @@
+[hostinfo]
+hadoop001 ansible_ssh_host=192.168.29.26
+hadoop002 ansible_ssh_host=192.168.29.27
+hadoop003 ansible_ssh_host=192.168.29.28
+hadoop004 ansible_ssh_host=192.168.29.31
+hadoop005 ansible_ssh_host=192.168.29.32
+
+[hq]
+hq1 ansible_ssh_host=192.168.29.32
+
+[rundeck]
+rundeck1 ansible_ssh_host=192.168.29.32
+
+[zookeeper]
+zookeeper1 ansible_ssh_host=192.168.29.26 client_port="{{ ZOOKEEPER_PORT }}"
+zookeeper2 ansible_ssh_host=192.168.29.28 client_port="{{ ZOOKEEPER_PORT }}"
+zookeeper3 ansible_ssh_host=192.168.29.31 client_port="{{ ZOOKEEPER_PORT }}"
+
+[zeppelin]
+zeppelin1 ansible_ssh_host=192.168.29.26
