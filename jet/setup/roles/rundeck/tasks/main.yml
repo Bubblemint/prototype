@@ -1,0 +1,84 @@
+---
+- include_vars: password
+
+- name: make rundeck base dir
+  file: dest={{ RUNDECK_PACKAGE_PATH }} mode=755 owner={{ user }} group={{ group }} state=directory
+
+- name: distribute rundeck package
+  copy: src={{ RUNDECK_PACKAGE_JAR_NAME }} dest={{ RUNDECK_PACKAGE_PATH }} 
+  register: result1
+
+- name: sym. link rundeck package in env
+  file: src={{ RUNDECK_PACKAGE_PATH }} dest={{ RUNDECK_HOME }} state=link
+  register: result2
+
+- name: mkdir rundeck data dir
+  file: dest={{ JET_CONF_PATH }}/rundeck mode=755 owner={{ user }} group={{ group }} state=directory
+
+- name: mkdir rundeck data dir
+  file: dest={{ JET_DATA_PATH }}/rundeck/projects/Jet/etc mode=755 owner={{ user }} group={{ group }} state=directory
+
+- name: mkdir rundeck log dir
+  file: dest={{ JET_LOG_PATH }}/rundeck mode=755 owner={{ user }} group={{ group }} state=directory
+
+- name: generate installer script 
+  template: src={{ RUNDECK_INSTALL_SCRIPT }}.j2 dest={{ RUNDECK_PACKAGE_PATH }}/{{ RUNDECK_INSTALL_SCRIPT }} mode=0755 backup=yes
+
+- name: check if rundeck is not running
+  shell: ps x | grep java | grep {{ RUNDECK_PACKAGE_JAR_NAME }} | wc -l
+  register: rundeck_status
+  changed_when: rundeck_status.stdout | search("0|1") == true
+
+- name: kill the existing rundeck instance
+  shell: "{{ RUNDECK_SBIN_FILE }} stop"
+  when: (result1 or result2).changed == True and rundeck_status.changed == False
+
+- name: wait for the existing rundeck to be shut down
+  wait_for: port={{ RUNDECK_PORT }} delay=10 state=stopped timeout=60
+  when: (result1 or result2).changed == True and rundeck_status.changed == False
+
+- name: install rundeck using rundeck launcher
+  shell: "{{ RUNDECK_PACKAGE_PATH }}/{{ RUNDECK_INSTALL_SCRIPT }} {{ inventory_hostname }}"
+  when: (result1 or result2).changed == True
+
+- name: wait for initial startup
+  wait_for: port={{ RUNDECK_PORT }} delay=10 state=started timeout=60
+  when: (result1 or result2).changed == True
+
+- name: kill the rundeck instance
+  shell: kill `cat {{ RUNDECK_PID_FILE }}`
+  when: (result1 or result2).changed == True
+
+- name: wait for the new rundeck to be shut down
+  wait_for: port={{ RUNDECK_PORT }} delay=10 state=stopped timeout=60
+  when: (result1 or result2).changed == True
+  changed_when: (result1 or result2).changed == True
+  notify: restart rundeck
+
+- name: copy generated configs
+  shell: "rsync -av {{ RUNDECK_PACKAGE_PATH }}/server/config/* {{ RUNDECK_CONF_DIR }}/ --exclude=realm.properties"
+  when: (result1 or result2).changed == True
+  notify: restart rundeck
+
+- name: change project dir settings in framework.properties
+  replace: dest={{ RUNDECK_PACKAGE_PATH }}/etc/framework.properties regexp='{{ RUNDECK_PACKAGE_PATH }}/projects' replace='{{ RUNDECK_DATA_DIR }}/projects'
+  when: (result1 or result2).changed == True
+  notify: restart rundeck
+
+- name: copy rundeck plugins
+  copy: src={{ item }} dest={{ RUNDECK_LIBEXT_DIR }}/{{ item|basename }}
+  with_fileglob:
+    - ../files/rundeck-slack*.jar
+  notify: restart rundeck
+
+- name: generate rundeck realm.properties
+  template: src=realm.properties.j2 dest={{ RUNDECK_CONF_DIR }}/realm.properties
+  notify: restart rundeck
+
+- name: make Jet project setting
+  template: src=project.properties.j2 dest={{ RUNDECK_DATA_DIR }}/projects/Jet/etc/project.properties
+  notify: restart rundeck
+
+- name: copy node info
+  copy: src=rundeckres.json dest={{ RUNDECK_DATA_DIR }}/projects/Jet/etc/
+  notify: restart rundeck

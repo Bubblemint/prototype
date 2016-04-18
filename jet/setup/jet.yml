@@ -9,7 +9,7 @@
 #- include: playbooks/kafka_mirrormaker.yml
 #- include: playbooks/kafka-manager.yml
 #- include: playbooks/kafka-offset-monitor.yml
-- include: playbooks/zk-web.yml
+#- include: playbooks/zk-web.yml
 - include: playbooks/zeppelin.yml
 #- include: playbooks/sensu.yml
 #- include: playbooks/topbeat.yml

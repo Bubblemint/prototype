@@ -1,0 +1,8 @@
+#!/bin/bash
+INSTANCE=$1
+source /etc/profile
+
+export RDECK_BASE={{ RUNDECK_PACKAGE_PATH }}
+cd {{ RUNDECK_PACKAGE_PATH }}; nohup java -Xmx1024m -Dserver.http.port={{ RUNDECK_PORT }} -Ddefault.user.name={{ user }} -Ddefault.user.password={{ password }} -Dserver.datastore.path={{ RUNDECK_DATA_DIR }}/rundeck -jar {{ RUNDECK_PACKAGE_JAR_NAME }} -b {{ RUNDECK_PACKAGE_PATH }} -p {{ RUNDECK_DATA_DIR }}/projects -c {{ RUNDECK_CONF_DIR }} > {{ RUNDECK_LOG_DIR }}/rundeck_${INSTANCE}.log 2>&1 &
+
+echo $! > {{ RUNDECK_PID_FILE }}

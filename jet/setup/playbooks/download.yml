@@ -1,0 +1,6 @@
+---
+- name: Prepare Jet setup on HQ
+  hosts: hq
+  user: "{{ user }}"
+  roles: 
+    - download

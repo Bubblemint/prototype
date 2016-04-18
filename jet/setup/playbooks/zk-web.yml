@@ -1,0 +1,6 @@
+---
+- name: Setup zk-web
+  hosts: zk-web
+  user: "{{ user }}"
+  roles:
+    - zk-web

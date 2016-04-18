@@ -1,0 +1,11 @@
+ZEPPELIN_PACKAGE_PATH: "{{ PACKAGE_PATH }}/{{ ZEPPELIN_PACKAGE_NAME }}"
+
+ZEPPELIN_HOME: "{{ JET_ENV_PATH }}/zeppelin"
+ZEPPELIN_CONF_DIR: "{{ JET_CONF_PATH }}/zeppelin"
+ZEPPELIN_LOG_DIR: "{{ JET_LOG_PATH }}/zeppelin/{{ inventory_hostname }}"
+ZEPPELIN_PID_DIR: "{{ JET_RUN_PATH }}/zeppelin"
+ZEPPELIN_DATA_DIR: "{{ JET_DATA_PATH }}/zeppelin"
+
+ZEPPELIN_CONF_TEMPLATE_NAME: "zeppelin-env.sh.j2"
+ZEPPELIN_CONF_FILE: "{{ ZEPPELIN_CONF_DIR }}/zeppelin-env.sh"
+ZEPPELIN_SBIN_FILE: "{{ ZEPPELIN_HOME }}/bin/zeppelin-daemon.sh"

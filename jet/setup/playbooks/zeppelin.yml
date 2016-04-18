@@ -1,0 +1,6 @@
+---
+- name: Setup zeppelin 
+  hosts: zeppelin
+  user: "{{ user }}"
+  roles:
+    - zeppelin

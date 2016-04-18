@@ -1,0 +1,31 @@
+---
+# init project structure
+- name: mkdir cosmos-package dir
+  file: dest={{ PACKAGE_PATH }} mode=755 owner={{ user }} group={{ group }} state=directory
+
+- name: mkdir Jet-conf  dir
+  file: dest={{ JET_CONF_PATH }} mode=755 owner={{ user }} group={{ group }} state=directory
+
+- name: mkdir Jet-data  dir
+  file: dest={{ JET_DATA_PATH }} mode=755 owner={{ user }} group={{ group }} state=directory
+
+- name: mkdir Jet-env  dir
+  file: dest={{ JET_ENV_PATH }} mode=755 owner={{ user }} group={{ group }} state=directory
+
+- name: mkdir Jet-plugin  dir
+  file: dest={{ JET_PLUGIN_PATH }} mode=755 owner={{ user }} group={{ group }} state=directory
+
+- name: mkdir Jet-sbin  dir
+  file: dest={{ JET_SBIN_PATH }} mode=755 owner={{ user }} group={{ group }} state=directory
+
+- name: mkdir Jet-log  dir
+  file: dest={{ JET_LOG_PATH }} mode=755 owner={{ user }} group={{ group }} state=directory
+
+- name: mkdir Jet-run  dir
+  file: dest={{ JET_RUN_PATH }} mode=755 owner={{ user }} group={{ group }} state=directory
+
+- name: distribute download_from_ETL.sh
+  copy: src=download_from_ETL.sh dest={{ PACKAGE_PATH }}/ mode=755
+
+- name: add {{ CLOUDERA_CDH_BIN_PATH }} to path
+  lineinfile: dest=/home/cloud/.bash_profile state=present backrefs=yes regexp='^PATH=(["]*)((?!.*?{{ CLOUDERA_CDH_BIN_PATH }}).*?)(["]*)$' line="PATH=\1\2:{{ CLOUDERA_CDH_BIN_PATH }}\3"

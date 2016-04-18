@@ -6,10 +6,10 @@ hadoop004 ansible_ssh_host=192.168.29.31
 hadoop005 ansible_ssh_host=192.168.29.32
 
 [hq]
-hq1 ansible_ssh_host=192.168.29.32
+hq1 ansible_ssh_host=192.168.29.26
 
 [rundeck]
-rundeck1 ansible_ssh_host=192.168.29.32
+rundeck1 ansible_ssh_host=192.168.29.26
 
 [zookeeper]
 zookeeper1 ansible_ssh_host=192.168.29.26 client_port="{{ ZOOKEEPER_PORT }}"
@@ -18,3 +18,36 @@ zookeeper3 ansible_ssh_host=192.168.29.31 client_port="{{ ZOOKEEPER_PORT }}"
 
 [zeppelin]
 zeppelin1 ansible_ssh_host=192.168.29.26
+
+
+[jet:children]
+hostinfo
+hq
+rundeck
+#zookeeper
+#kafka
+#storm
+#kafka_mirrormaker
+#sensu
+#kafka-manager
+#kafka-offset-monitor
+#zk-web
+zeppelin
+#topbeat
+#ergosphere
+
+
+[jet:vars]
+ansible_ssh_user=cloud
+user={{ ansible_ssh_user }}
+group={{ ansible_ssh_user }}
+#ansible_python_interpreter=/app/python/bin/python
+env_type=production
+host_type=physical
+#zk_port={{ ZOOKEEPER_PORT }}
+#zk_connect=172.21.0.171:2181,172.21.0.172:2181,172.21.0.173:2181
+#zk_connect={% for host in groups['zookeeper'] %}{{ hostvars[host]['ansible_ssh_host'] }}:{{ zk_port }}{% if not loop.last %},{% endif %}{% endfor %}/jet-kafka
+#broker_port={{ KAFKA_BROKER_PORT }}
+#kafka_broker_list={% for host in groups['kafka'] %}{{ hostvars[host]['ansible_ssh_host'] }}:{{ broker_port }}{% if not loop.last %},{% endif %}{% endfor %}
+#es_rest_host_list=["172.21.0.211:9200","172.21.0.212:9200","172.21.0.213:9200","172.21.0.214:9200","172.21.0.215:9200","172.21.0.216:9200"]
+#es_rest_host=http://172.21.0.213:9200

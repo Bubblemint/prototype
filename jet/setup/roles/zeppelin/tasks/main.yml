@@ -1,0 +1,35 @@
+---
+- name: distribute zeppelin package
+  unarchive: src={{ ZEPPELIN_PACKAGE_ZIP_NAME }} dest={{ PACKAGE_PATH }} creates={{ ZEPPELIN_PACKAGE_PATH }}
+  notify: restart zeppelin
+
+- name: sym. link zeppelin package in env
+  file: src={{ ZEPPELIN_PACKAGE_PATH }} dest={{ ZEPPELIN_HOME }} state=link
+  notify: restart zeppelin
+
+- name: mkdir zeppelin conf dir
+  file: dest={{ JET_CONF_PATH }}/zeppelin mode=755 owner={{ user }} group={{ group }} state=directory
+
+- name: mkdir zeppelin data dir
+  file: dest={{ JET_DATA_PATH }}/zeppelin mode=755 owner={{ user }} group={{ group }} state=directory
+
+- name: mkdir zeppelin log dir
+  file: dest={{ JET_LOG_PATH }}/zeppelin/{{ inventory_hostname }} mode=755 owner={{ user }} group={{ group }} state=directory
+
+- name: copy log4j.properties
+  copy: src=log4j.properties dest={{ ZEPPELIN_CONF_DIR }}/log4j.properties
+  notify: restart zeppelin
+
+- name: copy fairscheduler.xml
+  copy: src=fairscheduler.xml dest={{ ZEPPELIN_CONF_DIR }}/fairscheduler.xml
+  notify: restart zeppelin
+
+- name: generate zeppelin conf from the template file
+  template: src={{ ZEPPELIN_CONF_TEMPLATE_NAME }} dest={{ ZEPPELIN_CONF_FILE }}
+  notify: restart zeppelin
+
+- name: start zeppelin if not running
+  shell: ps ax | grep java | grep zeppelin | grep {{ inventory_hostname }} |  wc -l
+  register: zeppelin_status
+  changed_when: zeppelin_status.stdout | search("0|1")  == true
+  notify: restart zeppelin

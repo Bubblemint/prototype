@@ -1,0 +1,10 @@
+---
+# Gather facts from all hosts, then generate rundeckres.json in inventory_dir.
+- name: generate node info for Rundeck
+  hosts: hostinfo
+  user: "{{ user }}"
+  roles:
+  - role: yaegashi.rundeckres
+    rundeckres_path: "{{ ANSIBLE_BASE_DIR }}/roles/rundeck/files/rundeckres.json"
+    rundeckres_username: "{{ user }}"
+    facts_dir: "{{ ANSIBLE_BASE_DIR }}/target/facts"

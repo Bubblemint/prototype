@@ -1,0 +1,9 @@
+---
+# Handler for rundeck
+
+- name: restart rundeck
+  shell: "export RDECK_BASE={{ RUNDECK_PACKAGE_PATH }};{{ RUNDECK_SBIN_FILE }} restart"
+  notify: wait for the rundeck to be started
+
+- name: wait for the rundeck to be started
+  wait_for: port={{ RUNDECK_PORT }} delay=10 state=started timeout=60

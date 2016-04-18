@@ -1,0 +1,6 @@
+---
+- name: install rundeck
+  hosts: rundeck
+  user: "{{ user }}"
+  roles:
+  - role: rundeck

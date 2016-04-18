@@ -1,0 +1,6 @@
+---
+- name: Prepare Jet system
+  hosts: hostinfo
+  user: "{{ user }}"
+  roles:
+    - init

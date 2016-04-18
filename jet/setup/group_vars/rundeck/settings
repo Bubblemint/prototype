@@ -1,0 +1,13 @@
+RUNDECK_PACKAGE_PATH: "{{ PACKAGE_PATH }}/{{ RUNDECK_NAME }}"
+
+RUNDECK_HOME: "{{ JET_ENV_PATH }}/rundeck"
+RUNDECK_LOG_DIR: "{{ JET_LOG_PATH }}/rundeck"
+RUNDECK_LIBEXT_DIR: "{{ RUNDECK_PACKAGE_PATH }}/libext"
+RUNDECK_DATA_DIR: "{{ JET_DATA_PATH }}/rundeck"
+RUNDECK_CONF_DIR: "{{ JET_CONF_PATH }}/rundeck"
+RUNDECK_SBIN_FILE: "{{ RUNDECK_HOME }}/server/sbin/rundeckd"
+
+RUNDECK_INSTALL_SCRIPT: "install_rundeck_from_launcher.sh"
+RUNDECK_PID_FILE: "{{ JET_RUN_PATH }}/rundeck_{{ inventory_hostname }}.pid"
+
+RUNDECK_PORT: 4440

@@ -1,0 +1,5 @@
+---
+# Handler for zeppelin
+
+- name: restart zeppelin
+  shell: "{{ ZEPPELIN_SBIN_FILE }} --config {{ ZEPPELIN_CONF_DIR }} restart chdir={{ ZEPPELIN_HOME }}/bin"

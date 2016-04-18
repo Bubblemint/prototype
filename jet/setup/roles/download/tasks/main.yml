@@ -6,7 +6,7 @@
   failed_when: cmd_result.changed == "true" and "'FAILED' in cmd_result.stdout"
 
 - name: download zeppelin package from SETL
-  script: download_from_ETL.sh zeppelin {{ ZEPPELIN_PACKAGE_ZIP_NAME }} {{ ANSIBLE_BASE_DIR }}/roles/zeppelin/files/ 
+  script: download_from_ETL.sh zeppelin {{ ZEPPELIN_PACKAGE_ZIP_NAME }} {{ ANSIBLE_BASE_DIR }}/roles/zeppelin/files/
             creates={{ ANSIBLE_BASE_DIR }}/roles/zeppelin/files/{{ ZEPPELIN_PACKAGE_ZIP_NAME }}
   register: cmd_result
   failed_when: cmd_result.changed=="true" and "'FAILED' in cmd_result.stdout"
